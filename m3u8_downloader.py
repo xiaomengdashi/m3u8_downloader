@@ -22,11 +22,11 @@ headers = {
 
 ###############################配置信息################################
 # m3u8链接批量输入文件(必须是utf-8编码)
-m3u8InputFilePath = "D:/input/m3u8_input.txt"
+m3u8InputFilePath = "./input/m3u8_input.txt"
 # 设置视频保存路径
-saveRootDirPath = "D:/output"
+saveRootDirPath = "./output"
 # 下载出错的m3u8保存文件
-errorM3u8InfoDirPath = "D:/output/error.txt"
+errorM3u8InfoDirPath = "./output/error.txt"
 # m3u8文件、key文件下载尝试次数，ts流默认无限次尝试下载，直到成功
 m3u8TryCountConf = 10
 # 线程数（同时下载的分片数）
@@ -105,7 +105,7 @@ def getM3u8Info():
             if rowData.endswith(".m3u8"):
                 scheme = urlparse(m3u8Url).scheme
                 netloc = urlparse(m3u8Url).netloc
-                m3u8Url = scheme + "://" + netloc + rowData
+                m3u8Url = scheme + "://" + netloc + "/" + rowData
                 rootUrlPath = m3u8Url[0:m3u8Url.rindex('/')]
 
                 return getM3u8Info()
@@ -259,7 +259,7 @@ def ffmpegConvertToMp4(inputFilePath, ouputFilePath):
         print(inputFilePath + " 路径不存在！")
         logFile.write(inputFilePath + " 路径不存在！\n")
         return False
-    cmd = r'.\lib\ffmpeg -i "{0}" -vcodec copy -acodec copy "{1}"'.format(inputFilePath, ouputFilePath)
+    cmd = r'ffmpeg -i "{0}" -vcodec copy -acodec copy "{1}"'.format(inputFilePath, ouputFilePath)
     if sys.platform == "darwin":
         cmd = r'./lib/ffmpeg -i "{0}" -vcodec copy -acodec copy "{1}"'.format(inputFilePath, ouputFilePath)
     if os.system(cmd) == 0:
@@ -281,16 +281,16 @@ def printProcessBar(sumCount, doneCount, width, isPrintDownloadSpeed=False):
     if isPrintDownloadSpeed:
         # downloadSpeed的单位是B/s, 超过1024*1024转换为MiB/s, 超过1024转换为KiB/s
         if downloadSpeed > 1048576:
-            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}MiB/s'.format(sumCount, doneCount, useCount * '■', spaceCount * '□', precent, downloadSpeed / 1048576),
+            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}MiB/s'.format(doneCount, sumCount, useCount * '■', spaceCount * '□', precent, downloadSpeed / 1048576),
                   file=sys.stdout, flush=True, end='')
         elif downloadSpeed > 1024:
-            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}KiB/s'.format(sumCount, doneCount, useCount * '■', spaceCount * '□', precent, downloadSpeed / 1024),
+            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}KiB/s'.format(doneCount, sumCount, useCount * '■', spaceCount * '□', precent, downloadSpeed / 1024),
                   file=sys.stdout, flush=True, end='')
         else:
-            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}B/s  '.format(sumCount, doneCount, useCount * '■', spaceCount * '□', precent, downloadSpeed),
+            print('\r\t{0}/{1} {2}{3} {4:.2f}% {5:>7.2f}B/s  '.format(doneCount, sumCount, useCount * '■', spaceCount * '□', precent, downloadSpeed),
                   file=sys.stdout, flush=True, end='')
     else:
-        print('\r\t{0}/{1} {2}{3} {4:.2f}%'.format(sumCount, doneCount, useCount*'■', spaceCount*'□', precent), file=sys.stdout, flush=True, end='')
+        print('\r\t{0}/{1} {2}{3} {4:.2f}%'.format(doneCount, sumCount, useCount*'■', spaceCount*'□', precent), file=sys.stdout, flush=True, end='')
 
 # m3u8下载器
 def m3u8VideoDownloader():

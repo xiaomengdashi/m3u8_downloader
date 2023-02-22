@@ -1,0 +1,4 @@
+测试1|http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8
+测试2|http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8
+
+测试3|http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8
